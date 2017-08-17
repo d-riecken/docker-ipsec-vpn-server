@@ -1,5 +1,4 @@
-FROM debian:jessie
-MAINTAINER Lin Song <linsongui@gmail.com>
+FROM resin/rpi-raspbian
 
 ENV REFRESHED_AT 2017-03-23
 ENV SWAN_VER 3.20
