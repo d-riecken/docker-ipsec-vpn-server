@@ -1,7 +1,8 @@
 FROM resin/rpi-raspbian
 LABEL maintainer="Lin Song <linsongui@gmail.com>"
 
-ENV REFRESHED_AT 2017-12-06
+ENV REFRESHED_AT 2018-06-05
+
 ENV SWAN_VER 3.22
 
 WORKDIR /opt/src
@@ -27,6 +28,12 @@ RUN apt-get -yqq update \
     && make -s install-base \
     && cd /opt/src \
     && rm -rf "/opt/src/libreswan-${SWAN_VER}" \
+    && os_arch="$(dpkg --print-architecture)" \
+    && deb_url="debian/pool/main/x/xl2tpd/xl2tpd_1.3.12-1_${os_arch}.deb" \
+    && wget -t 3 -T 30 -nv -O xl2tpd.deb "https://mirrors.kernel.org/${deb_url}" \
+    || wget -t 3 -T 30 -nv -O xl2tpd.deb "https://debian.osuosl.org/${deb_url}" \
+    && apt-get -yqq install ./xl2tpd.deb \
+    && rm -f xl2tpd.deb \
     && apt-get -yqq remove \
          libnss3-dev libnspr4-dev pkg-config libpam0g-dev \
          libcap-ng-dev libcap-ng-utils libselinux1-dev \
